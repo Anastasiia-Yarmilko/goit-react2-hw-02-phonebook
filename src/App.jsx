@@ -1,6 +1,9 @@
 import './App.css';
 import { Component } from 'react';
 import ContactForm from 'components/ContactForm/ContactForm';
+import Filter from 'components/Filter/Filter';
+import ContactList from 'components/ContactList/ContactList';
+
 
 export default class App extends Component {
   state = {
@@ -15,16 +18,47 @@ export default class App extends Component {
     number: ''
   }
 
-  render() {
-    return (
-      <div>
-        <h1>Phonebook</h1>
-  <ContactForm />
+  onHandleNewContact = (contact) => {
+    let { contacts } = this.state;
+    if (contacts.find(({ name }) => name === contact.name)) {
+      alert(`${contact.name} has been already added`);
+      return;
+    }
+    contacts = [...contacts, contact];
+    this.setState({ contacts });
+  }
 
-  <h2>Contacts</h2>
-  {/* <Filter />
-  <ContactList /> */}
-      </div>
+  onHandleFilter = filter => {
+    this.setState({ filter });
+  }
+
+  deleteContact = (id) => {
+    this.setState(prevState => {
+      return {
+        contacts: prevState.contacts.filter(contact => contact.id !== id)
+      }
+    })
+  }
+
+  searchContact = () => {
+    const { contacts, filter } = this.state;
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    )
+  }
+
+  render() {
+    const { filter } = this.state;
+    return (
+      <>
+        <h1>Phonebook</h1>
+        <ContactForm addContact={this.onHandleNewContact}/>
+        <h2>Contacts</h2>
+        <Filter searchContact={this.onHandleFilter} value={filter}/>
+        <ContactList
+          deleteContact={this.deleteContact}
+          searchContact={this.searchContact()}/>
+      </>
     )
   }
 }
