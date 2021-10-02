@@ -7,7 +7,7 @@ const ContactList = ({ searchContact, deleteContact }) => {
         <ul className={css.list}>
             {searchContact.map(({ name, number, id }) => {
                 return (
-                    <li className={css.item} key={id}>
+                    <li className={css.item} key={name}>
                         <p className={css.contact}>
                             {' '}
                             {name}:{number}
@@ -31,7 +31,7 @@ ContactList.propTypes = {
         PropTypes.exact({
             name: PropTypes.string.isRequired,
             number: PropTypes.string.isRequired,
-            id: PropTypes.string.isRequired
+            id: PropTypes.string
         }),
     ).isRequired,
 };
