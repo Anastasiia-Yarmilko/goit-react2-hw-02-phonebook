@@ -3,6 +3,7 @@ import { Component } from 'react';
 import ContactForm from 'components/ContactForm/ContactForm';
 import Filter from 'components/Filter/Filter';
 import ContactList from 'components/ContactList/ContactList';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default class App extends Component {
@@ -18,14 +19,24 @@ export default class App extends Component {
     number: ''
   }
 
-  onHandleNewContact = (contact) => {
-    let { contacts } = this.state;
-    if (contacts.find(({ name }) => name === contact.name)) {
-      alert(`${contact.name} has been already added`);
-      return;
+  onHandleNewContact = ({ name, number }) => {
+    const findDublicate = this.state.contacts.find(
+      (contact) => contact.name === name
+    );
+
+    if (findDublicate) {
+      alert("Такой контакт уже существует!");
+    } else {
+      const contact = {
+        name,
+        number,
+        id: uuidv4(),
+      };
+
+      this.setState((prevState) => ({
+        contacts: [...prevState.contacts, contact],
+      }));
     }
-    contacts = [...contacts, contact];
-    this.setState({ contacts });
   }
 
   onHandleFilter = filter => {
